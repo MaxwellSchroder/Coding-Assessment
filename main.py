@@ -6,10 +6,28 @@ numAlphabet = 26
 # the offset needed to bring the letter a from 97 to 0th Index for the list of lastname buckets
 asciiOffset = 97
 
-
 class Buckets:
     def __init__(self):
         self.list = []
+
+    '''
+    This function takes the new name to be inserted and a name in the list
+    it iterates through the new name and compares the ascii ordering of them.
+    In the case of the new name being longer than the listName, the shorter name will go first
+    '''
+    def compareNames(self, newName, listName):
+        for i in range(len(newName)):
+            # if the listName has fewer words in it up to this point, it goes first
+            if i > len(listName):
+                return False
+            # compare the new word to the word in listName, if it is smaller than it goes first
+            if newName[i] < listName[i]:
+                return True
+        # make sure the newName didn't just run out of words
+        if i < len(listName):
+            return True
+        # all other cases fail, they must be identical. Either way it doesn't matter
+        return True
 
     # inserting a list (lastname, first names) into the buckets
     def insertInto(self, newName):
@@ -17,6 +35,19 @@ class Buckets:
         if (len(self.list)) == 0:
             self.list.insert(0, newName)
         # there are other names. Do insertion sort
+        else:
+            # insert into correct position by looping through until it is found
+            for i in range(len(self.list) + 1):
+                # if it has already gone through the entire list, just add it to the end
+                if i == len(self.list) + 1:
+                    self.list.append(newName)
+                    print("this one")
+                else:
+                    listName = self.list[i]
+                    # check names recursively, if true insert at this position
+                    if self.compareNames(newName, listName):
+                        self.list.insert(i, newName)
+                        break
 
     def printy(self):
         print(self.list)
@@ -34,8 +65,10 @@ class Names:
 
     def insertNameIntoList(self, index, name):
         self.namesList[index].insertInto(name)
+        print("Inserting {} into {}".format(name[0], index))
         self.namesList[index].printy()
-        print("Inserting %s into %i", name[0], index)
+        #self.namesList[index].printy()
+
 
 
 # Press the green button in the gutter to run the script.
