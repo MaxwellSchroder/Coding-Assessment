@@ -10,6 +10,9 @@ class Buckets:
     def __init__(self):
         self.list = []
 
+    def getList(self):
+        return self.list.copy()
+
     '''
     This function takes the new name to be inserted and a name in the list
     it iterates through the new name and compares the ascii ordering of them.
@@ -50,7 +53,8 @@ class Buckets:
                         break
 
     def printy(self):
-        print(self.list)
+        if (len(self.list) > 0):
+            print(self.list)
 
 
 class Names:
@@ -60,15 +64,14 @@ class Names:
             bucket = Buckets()
             self.namesList.append(bucket)
 
-        #self.namesList = [Buckets] * numAlphabet
-        #print(self.namesList)
-
     def insertNameIntoList(self, index, name):
         self.namesList[index].insertInto(name)
         print("Inserting {} into {}".format(name[0], index))
-        self.namesList[index].printy()
         #self.namesList[index].printy()
 
+    def printOrderedNames(self):
+        for i in range(len(self.namesList)):
+            self.namesList[i].printy()
 
 
 # Press the green button in the gutter to run the script.
@@ -100,5 +103,4 @@ if __name__ == '__main__':
 
                 # insert that name into the bucket
                 names.insertNameIntoList(firstLetterIndex, words)
-                #print(words)
-    #print(names)
+    names.printOrderedNames()
