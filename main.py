@@ -60,6 +60,34 @@ class Buckets:
         if (len(self.list) > 0):
             print(self.list)
 
+    ''' This functions job is to take a list of an individuals name, which goes surname, then firstnames, and 
+    return a string which is the correct way of reading that name. That being firstname, then surname
+    '''
+    def getNameInOrder(self, nameList):
+        nameString = ''
+        if len(nameList) > 1:
+            # need to add multiple names. Therefore, must correct the order. Do this by indexing from the 2nd Index up
+            # until the end of the list. Then add the lastname last
+            for i in range(len(nameList) - 1):
+                # go through each name, and change order of the first word to the last
+                nameString = nameString + nameList[i + 1] + ' '
+            nameString = nameString + nameList[0]
+        else:
+            # just one name to add
+            nameString = nameList[0]
+        return nameString
+
+    def getBucketNames(self):
+        # check if bucket has any names in the first place
+        if len(self.list) == 0:
+            return ''
+        else:
+            # there are one or more names to add to our string
+            bucketString = ''
+            for i in range(len(self.list)):
+                singleNameString = self.getNameInOrder(self.list[i])
+                bucketString = bucketString + singleNameString + '\n'
+            return bucketString
 
 class Names:
     def __init__(self):
@@ -79,13 +107,13 @@ class Names:
 
     def sortThroughNames(self):
         # set of alpha values used in names
-        chars = set('abcdefghijklmnopqrstuvwxyz-\n ')
+        chars = set('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-\n ')
 
         # read file
         with open(sys.argv[1], 'r') as my_file:
             lines = my_file.readlines()
             for line in lines:
-                line = line.lower()
+                #line = line.lower()
                 # check that line only contains alphanumeric characters
                 # any((c in chars) for c in s)
                 if all((c in chars) for c in line):
@@ -96,7 +124,8 @@ class Names:
                         lastName = words[-1]
 
                         # find the index of the last name in the alphabet
-                        firstLetterIndex = ord(lastName[0]) - asciiOffset
+                        lowercaseLastname = lastName.lower()
+                        firstLetterIndex = ord(lowercaseLastname[0]) - asciiOffset
 
                         # rearrange to have lastname first
                         words.insert(0, lastName)
@@ -106,6 +135,20 @@ class Names:
                         # insert that name into the bucket
                         self.insertNameIntoList(firstLetterIndex, words)
 
+    '''This function will go through the namesList and write each name correctly to file.
+    This involves changing the order of individual names to put the last name back in its correct position
+    '''
+    def writeNamesToFile(self):
+        entireListString = ''
+        for bucket in self.namesList:
+            # return the string of all names in that bucket, in the correct order
+            bucketString = bucket.getBucketNames()
+            if len(bucketString) > 0:
+                entireListString = entireListString + bucketString
+        print(entireListString)
+
+
+
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
@@ -114,5 +157,6 @@ if __name__ == '__main__':
 
     names.sortThroughNames()
 
-
     names.printOrderedNames()
+
+    names.writeNamesToFile()
