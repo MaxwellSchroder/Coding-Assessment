@@ -8,7 +8,7 @@ class TestNames(unittest.TestCase):
     testing using the example names given on the spec
     '''
     def test_names_equal(self):
-        names = Names('names.txt')
+        names = Names('exampleNames.txt')
 
         names.sortThroughNames()
 
@@ -19,7 +19,7 @@ class TestNames(unittest.TestCase):
             fileContents = sortedNamesList.read()
 
         # get the answers of the order of names
-        with open('exampleAnswerNames.txt', 'r') as answerToExampleNames:
+        with open('exampleNamesAnswer.txt', 'r') as answerToExampleNames:
             answerNames = answerToExampleNames.read()
 
         self.assertEqual(fileContents, answerNames)
