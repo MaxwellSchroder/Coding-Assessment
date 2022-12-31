@@ -6,7 +6,9 @@ numAlphabet = 26
 # the offset needed to bring the letter a from 97 to 0th Index for the list of lastname buckets
 asciiOffset = 97
 
-
+''' The bucket class is used to represent what happens within each grouping of surname's. This is where the individual
+ordering of names is done.
+'''
 class Buckets:
     def __init__(self):
         self.list = []
@@ -19,7 +21,6 @@ class Buckets:
     it iterates through the new name and compares the ascii ordering of them.
     In the case of the new name being longer than the listName, the shorter name will go first
     '''
-
     def compareNames(self, newName, listName):
         for i in range(len(newName)):
             # if the listName has fewer words in it up to this point, it goes first
@@ -35,7 +36,9 @@ class Buckets:
         # all other cases fail, they must be identical. Either way it doesn't matter
         return True
 
-    # inserting a list (lastname, first names) into the buckets
+    ''' This function's job is to insert a new name into a bucket correctly. This means iterating over the bucket
+    to find the correct place to put it.
+    '''
     def insertInto(self, newName):
         # if the bucket is empty, just add it to the front of the list
         if (len(self.list)) == 0:
@@ -57,7 +60,6 @@ class Buckets:
     ''' This functions job is to take a list of an individuals name, which goes surname, then firstnames, and 
     return a string which is the correct way of reading that name. That being firstname, then surname
     '''
-
     def getNameInOrder(self, nameList):
         nameString = ''
         if len(nameList) > 1:
@@ -72,6 +74,8 @@ class Buckets:
             nameString = nameList[0]
         return nameString
 
+    ''' Returns the list of all the names in this bucket, ordered correctly
+    '''
     def getBucketNames(self):
         # check if bucket has any names in the first place
         if len(self.list) == 0:
@@ -84,7 +88,12 @@ class Buckets:
                 bucketString = bucketString + singleNameString + '\n'
             return bucketString
 
-
+'''The Names class is used as the manager class to keep track of the 26 buckets that make up the 26 different letters
+of the alphabet. Each bucket contains the names which have the surname starting with the same letter.
+Each bucket is ordered upon insertion, so that it doesn't need to re-compute the ordering later
+This approach is advantageous to a list of names with a diverse surname starting letter. However, if the list
+of names being given to the program all have similar last names, then it is not as efficient as it could be.
+'''
 class Names:
     def __init__(self, filePath = None):
         self.namesList = []
@@ -97,9 +106,14 @@ class Names:
         else:
             self.filePath = ''
 
+    ''' Given a name, it inserts it into the correct bucket within the list of buckets
+    '''
     def insertNameIntoList(self, index, name):
         self.namesList[index].insertInto(name)
 
+    ''' Sorts through all the names given in a file, and then stores them correctly orderd in the list of
+    Bucket objects
+    '''
     def sortThroughNames(self):
         # set of alpha values used in names
         chars = set('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-\n ')
@@ -138,8 +152,8 @@ class Names:
 
     '''This function will go through the namesList and write each name correctly to file.
     This involves changing the order of individual names to put the last name back in its correct position
+    It then prints the sorted names to the output in the IDE
     '''
-
     def writeNamesToFile(self):
         entireListString = ''
         for bucket in self.namesList:
@@ -147,14 +161,11 @@ class Names:
             bucketString = bucket.getBucketNames()
             if len(bucketString) > 0:
                 entireListString = entireListString + bucketString
-        # remove final \n from string
-
         with open('sorted-names-list.txt', 'w') as f:
-            f.write(entireListString[:-1])
+            f.write(entireListString[:-1])# remove final \n from string
         print(entireListString)
 
 
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     # create class of sorter
     names = Names()
@@ -162,5 +173,3 @@ if __name__ == '__main__':
     names.sortThroughNames()
 
     names.writeNamesToFile()
-
-    # TESTING
