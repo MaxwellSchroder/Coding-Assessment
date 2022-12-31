@@ -1,2 +1,1 @@
-# coding projects
- A series of challenges and projects
+# FOR CODING ASSESSMENT
