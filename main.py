@@ -6,6 +6,7 @@ numAlphabet = 26
 # the offset needed to bring the letter a from 97 to 0th Index for the list of lastname buckets
 asciiOffset = 97
 
+
 class Buckets:
     def __init__(self):
         self.list = []
@@ -18,6 +19,7 @@ class Buckets:
     it iterates through the new name and compares the ascii ordering of them.
     In the case of the new name being longer than the listName, the shorter name will go first
     '''
+
     def compareNames(self, newName, listName):
         for i in range(len(newName)):
             # if the listName has fewer words in it up to this point, it goes first
@@ -25,7 +27,6 @@ class Buckets:
                 return False
             # compare the new word to the word in listName, if it is smaller than it goes first
             if newName[i] < listName[i]:
-                #print("Name {} is before {} ".format(newName[i], listName[i]))
                 return True
             else:
                 return False
@@ -38,31 +39,24 @@ class Buckets:
         # if the bucket is empty, just add it to the front of the list
         if (len(self.list)) == 0:
             self.list.insert(0, newName)
-            print("First word insert")
         # there are other names. Do insertion sort
         else:
             # insert into correct position by looping through until it is found
             for i in range(len(self.list) + 1):
-                print(i)
                 # if it has already gone through the entire list, just add it to the end
                 if i == len(self.list):
                     self.list.append(newName)
-                    print("this one")
                 else:
                     listName = self.list[i]
                     # check names recursively, if true insert at this position
                     if self.compareNames(newName, listName):
-                        print("Inserting {} before {}".format(newName, listName))
                         self.list.insert(i, newName)
                         break
-
-    def printy(self):
-        if (len(self.list) > 0):
-            print(self.list)
 
     ''' This functions job is to take a list of an individuals name, which goes surname, then firstnames, and 
     return a string which is the correct way of reading that name. That being firstname, then surname
     '''
+
     def getNameInOrder(self, nameList):
         nameString = ''
         if len(nameList) > 1:
@@ -89,6 +83,7 @@ class Buckets:
                 bucketString = bucketString + singleNameString + '\n'
             return bucketString
 
+
 class Names:
     def __init__(self):
         self.namesList = []
@@ -98,12 +93,6 @@ class Names:
 
     def insertNameIntoList(self, index, name):
         self.namesList[index].insertInto(name)
-        print("Inserting {} into {}".format(name[0], index))
-        #self.namesList[index].printy()
-
-    def printOrderedNames(self):
-        for i in range(len(self.namesList)):
-            self.namesList[i].printy()
 
     def sortThroughNames(self):
         # set of alpha values used in names
@@ -113,7 +102,7 @@ class Names:
         with open(sys.argv[1], 'r') as my_file:
             lines = my_file.readlines()
             for line in lines:
-                #line = line.lower()
+                # line = line.lower()
                 # check that line only contains alphanumeric characters
                 # any((c in chars) for c in s)
                 if all((c in chars) for c in line):
@@ -138,6 +127,7 @@ class Names:
     '''This function will go through the namesList and write each name correctly to file.
     This involves changing the order of individual names to put the last name back in its correct position
     '''
+
     def writeNamesToFile(self):
         entireListString = ''
         for bucket in self.namesList:
@@ -145,10 +135,9 @@ class Names:
             bucketString = bucket.getBucketNames()
             if len(bucketString) > 0:
                 entireListString = entireListString + bucketString
+        with open('sorted-names-list.txt', 'w') as f:
+            f.write(entireListString)
         print(entireListString)
-
-
-
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
@@ -156,7 +145,5 @@ if __name__ == '__main__':
     names = Names()
 
     names.sortThroughNames()
-
-    names.printOrderedNames()
 
     names.writeNamesToFile()
