@@ -29,8 +29,9 @@ class Buckets:
             if newName[i] < listName[i]:
                 return True
             else:
-                return False
-
+                # if the last names are the same, continue to the next loop
+                if newName[i] != listName[i]:
+                    return False
         # all other cases fail, they must be identical. Either way it doesn't matter
         return True
 
@@ -85,11 +86,16 @@ class Buckets:
 
 
 class Names:
-    def __init__(self):
+    def __init__(self, filePath = None):
         self.namesList = []
         for i in range(numAlphabet):
             bucket = Buckets()
             self.namesList.append(bucket)
+        # add a file path for testing
+        if filePath is not None:
+            self.filePath = filePath
+        else:
+            self.filePath = ''
 
     def insertNameIntoList(self, index, name):
         self.namesList[index].insertInto(name)
@@ -98,8 +104,14 @@ class Names:
         # set of alpha values used in names
         chars = set('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-\n ')
 
+        # This block of code is to allow for testing with a given filePath
+        if len(self.filePath) > 0:
+            nameOfFile = self.filePath
+        else:
+            nameOfFile = sys.argv[1]
+
         # read file
-        with open(sys.argv[1], 'r') as my_file:
+        with open(nameOfFile, 'r') as my_file:
             lines = my_file.readlines()
             for line in lines:
                 # line = line.lower()
@@ -135,9 +147,12 @@ class Names:
             bucketString = bucket.getBucketNames()
             if len(bucketString) > 0:
                 entireListString = entireListString + bucketString
+        # remove final \n from string
+
         with open('sorted-names-list.txt', 'w') as f:
-            f.write(entireListString)
+            f.write(entireListString[:-1])
         print(entireListString)
+
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
@@ -147,3 +162,5 @@ if __name__ == '__main__':
     names.sortThroughNames()
 
     names.writeNamesToFile()
+
+    # TESTING
